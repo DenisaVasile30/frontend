@@ -1,7 +1,13 @@
+import EventsList from './components/EventsList';
+import Login from './components/Login';
+
+
 function App() {
   return (
     <div>
-      Here will be the app
+      <Login/>
+      <EventsList/>
+
     </div>
   );
 }
