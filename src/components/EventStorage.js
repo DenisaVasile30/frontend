@@ -6,12 +6,16 @@ class EventStorage {
   constructor() {
     this.data = [];
     this.emitter = new EventEmitter();
+    this.generatedStatus ='';
   }
 
   async getEvents() {
     try {
-      // const response = await fetch(`${SERVER}/users/${id}/events`); 
-      const response = await fetch(`${SERVER}/users/events/all`);  
+      const href = window.location.href;
+      const id = href.split('/').at(-1);
+      const response = await fetch(`${SERVER}/users/${id}/events`); 
+      // const response = await fetch(`${SERVER}/users/events/all`); 
+      console.log("in getevents from storage"); 
       if (!response.ok) {
           throw response;
       }
@@ -23,13 +27,14 @@ class EventStorage {
     }
   };
 
-  async addEvent(id, event) {
+  async addEvent(event) {
     try {
-    console.log(event.name);
+      const href = window.location.href;
+      const id = href.split('/').at(-1);
 
-      // const response = await fetch(`${SERVER}/users/${id}/events/add`
+      const response = await fetch(`${SERVER}/users/${id}/events/add`
       // test only
-      const response = await fetch(`${SERVER}/users/2/events/add`
+      // const response = await fetch(`${SERVER}/users/2/events/add`
       , {
         method: 'POST',
         headers: {
@@ -41,14 +46,18 @@ class EventStorage {
         throw response;
       }
       this.getEvents();
+      this.generatedStatus = response.status;
+      console.log("resp::::::::"+this.generatedStatus);
     } catch(err) {
       console.warn(err);
       this.emitter.emit('ADD_EVENT_ERROR');
     }
   };
 
-  async updateEvent(id, idEvent, event) {
+  async updateEvent(idEvent, event) {
     try {
+      const href = window.location.href;
+      const id = href.split('/').at(-1);
       const response = await fetch(`${SERVER}/users/${id}/events/edit/${idEvent}`, {
         method: 'PUT',
         headers: {
@@ -60,14 +69,17 @@ class EventStorage {
           throw response;
       }
       this.getEvents();
+      this.generatedStatus = response.status;
     } catch(err) {
       console.warn(err);
       this.emitter.emit('EDIT_EVENT_ERROR');
     }
   };
 
-  async deleteEvent(id, idEvent) {
+  async deleteEvent(idEvent) {
     try {
+      const href = window.location.href;
+      const id = href.split('/').at(-1);
       const response = await fetch(`${SERVER}/users/${id}/events/delete/${idEvent}`, {
         method: 'DELETE',
         headers: {
