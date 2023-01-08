@@ -14,8 +14,6 @@ class EventStorage {
       const href = window.location.href;
       const id = href.split('/').at(-1);
       const response = await fetch(`${SERVER}/users/${id}/events`); 
-      // const response = await fetch(`${SERVER}/users/events/all`); 
-      console.log("in getevents from storage"); 
       if (!response.ok) {
           throw response;
       }
@@ -32,10 +30,7 @@ class EventStorage {
       const href = window.location.href;
       const id = href.split('/').at(-1);
 
-      const response = await fetch(`${SERVER}/users/${id}/events/add`
-      // test only
-      // const response = await fetch(`${SERVER}/users/2/events/add`
-      , {
+      const response = await fetch(`${SERVER}/users/${id}/events/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -47,7 +42,6 @@ class EventStorage {
       }
       this.getEvents();
       this.generatedStatus = response.status;
-      console.log("resp::::::::"+this.generatedStatus);
     } catch(err) {
       console.warn(err);
       this.emitter.emit('ADD_EVENT_ERROR');

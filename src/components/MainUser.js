@@ -24,8 +24,7 @@ function MainUser() {
       eventStorage.emitter.addListener('GET_EVENTS_SUCCESS', () => {
         setEvents(eventStorage.data);
     });
-       eventStorage.getEvents();
-      // console.log("in use effects");
+      eventStorage.getEvents();
     }
     getData();
   }, []);
@@ -133,14 +132,13 @@ function MainUser() {
         position: toast.POSITION.TOP_CENTER
       });
       handleCloseEdit();
-      console.log("after toast");
     } else {
       toast.error('Something went wrong while trying to edit the event!', {
         position: toast.POSITION.TOP_CENTER
       });  
     }      
   }
- 
+
     return(
       <div>
         <div>
@@ -204,6 +202,7 @@ function MainUser() {
           console.log(e)
         })}
         <table>
+          <thead>
           <tr>
             {columns.map((column) => {
                 return (
@@ -211,6 +210,7 @@ function MainUser() {
                 )
             })}
           </tr>
+          </thead>
           {events.map((e)=>{
             console.log(e);
             return (<tr>
@@ -220,10 +220,10 @@ function MainUser() {
               <td>{e.startHour}</td>
               <td>                
                 <Tooltip title="Delete">
-                <IconButton>
-                  <DeleteIcon onClick={() => {
+                <IconButton onClick={() => {
                   eventStorage.deleteEvent(e.id)
-                }} />
+                }}>
+                  <DeleteIcon />
                 </IconButton>
               </Tooltip>
                 <button onClick={() => {
@@ -294,6 +294,5 @@ function MainUser() {
       </div>
     );
   }
-
 
 export default MainUser;
