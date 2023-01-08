@@ -58,6 +58,7 @@ function MainUser() {
 
   const addEventForm = () => {
     setOpen(true);
+    resetValues();
   };
 
   const editEventForm = (e) => {
@@ -97,46 +98,64 @@ function MainUser() {
     setstartHour(evt.target.value);
   };
 
+  function resetValues() {
+    setName('');
+    setLocation('');
+    setstartHour('');
+  }
+
   async function addNewEvent() {
-    const eventToAdd = {
-      name: name,
-      location: location,
-      date: date,
-      startHour: startHour
-    };
-    await eventStorage.addEvent(eventToAdd);
-    if (eventStorage.generatedStatus == '201') {
-      toast.success('The event was added succesfully!', {
-        position: toast.POSITION.TOP_CENTER
-      });
-      handleClose();
-      console.log("after toast");
+    if (name.trim().length == 0 || location.trim().length == 0
+        || startHour.trim().length == 0) {
+          toast.error('Required fields cannot be empty!', {
+            position: toast.POSITION.TOP_CENTER
+          });
     } else {
-      toast.error('Something went wrong while trying to add the event!', {
-        position: toast.POSITION.TOP_CENTER
-      });
-    }
+      const eventToAdd = {
+        name: name,
+        location: location,
+        date: date,
+        startHour: startHour
+      };
+      await eventStorage.addEvent(eventToAdd);
+      if (eventStorage.generatedStatus == '201') {
+        toast.success('The event was added succesfully!', {
+          position: toast.POSITION.TOP_CENTER
+        });
+        handleClose();
+      } else {
+        toast.error('Something went wrong while trying to add the event!', {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+    }   
   }
 
   async function editEvent(e) {
-    const eventToEdit = {
-      name: name,
-      location: location,
-      date: date,
-      startHour: startHour
-    };
-    console.log("iddd::" + idEvent);
-    await eventStorage.updateEvent(idEvent, eventToEdit);
-    if (eventStorage.generatedStatus == '202') {
-      toast.success('The event was edited succesfully!', {
-        position: toast.POSITION.TOP_CENTER
-      });
-      handleCloseEdit();
+    if (name.trim().length == 0 || location.trim().length == 0
+        || startHour.trim().length == 0) {
+          toast.error('Required fields cannot be empty!', {
+            position: toast.POSITION.TOP_CENTER
+          });
     } else {
-      toast.error('Something went wrong while trying to edit the event!', {
-        position: toast.POSITION.TOP_CENTER
-      });  
-    }      
+      const eventToEdit = {
+        name: name,
+        location: location,
+        date: date,
+        startHour: startHour
+      };
+      await eventStorage.updateEvent(idEvent, eventToEdit);
+      if (eventStorage.generatedStatus == '202') {
+        toast.success('The event was edited succesfully!', {
+          position: toast.POSITION.TOP_CENTER
+        });
+        handleCloseEdit();
+      } else {
+        toast.error('Something went wrong while trying to edit the event!', {
+          position: toast.POSITION.TOP_CENTER
+        });  
+      }      
+    }    
   }
 
     return(
@@ -211,12 +230,13 @@ function MainUser() {
             })}
           </tr>
           </thead>
+          <tbody>
           {events.map((e)=>{
             console.log(e);
             return (<tr>
               <td>{e.name}</td>
               <td>{e.location}</td>
-              <td>{e.date}</td>
+              <td>{(e.date).substr(0,10)}</td>
               <td>{e.startHour}</td>
               <td>                
                 <Tooltip title="Delete">
@@ -289,6 +309,7 @@ function MainUser() {
               </td>
             </tr>)
         })}
+        </tbody>
         </table>
         </div>
       </div>
